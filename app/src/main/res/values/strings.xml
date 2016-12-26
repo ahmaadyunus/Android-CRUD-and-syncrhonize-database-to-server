@@ -16,4 +16,9 @@
     <string name="dashboard">Dashboard</string>
     <string name="transaction">Transaction</string>
     <string name="synchronze">Synchronize</string>
+    <string name="new_income">New Income</string>
+    <string name="description">Description</string>
+    <string name="amount">Amount</string>
+    <string name="submit">SUBMIT</string>
+    <string name="new_expense">New Expense</string>
 </resources>
