@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Navigation Draw Multiple Activity Test</string>
+    <string name="app_name">Task 4</string>
     <string-array name="navigation_drawer_items_array">
         <item>Home</item>
         <item>Profile</item>
@@ -21,4 +21,7 @@
     <string name="amount">Amount</string>
     <string name="submit">SUBMIT</string>
     <string name="new_expense">New Expense</string>
+    <string name="total">Total :</string>
+    <string name="income">Income</string>
+    <string name="expense">Expense</string>
 </resources>
