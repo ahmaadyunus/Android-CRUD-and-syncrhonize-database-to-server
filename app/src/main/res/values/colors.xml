@@ -9,6 +9,7 @@
     <!--<color name="colorIcons">#FFFFFF</color>-->
     <!--<color name="colorDivider">#BDBDBD</color>-->
     <color name="colorPrimary">#607D8B</color>
+    <color name="colorBackgroundCardView">#1E88E5</color>
     <color name="colorPrimaryDark">#455A64</color>
     <color name="colorPrimaryLight">#CFD8DC</color>
     <color name="colorAccent">#536DFE</color>

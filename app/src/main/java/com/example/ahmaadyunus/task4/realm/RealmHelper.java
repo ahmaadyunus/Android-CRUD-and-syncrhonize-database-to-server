@@ -22,6 +22,7 @@ import io.realm.Sort;
 public class RealmHelper {
     private static final String TAG = "RealmHelper";
     private static int sum_income=0;
+    private int id;
     private Realm realm;
     private RealmResults<Bill> realmResult;
     public Context context;
@@ -45,14 +46,15 @@ public class RealmHelper {
      * @param description
      * @param amount
      */
-    public void addIncome(int id, String type, String description, int amount) {
-        Bill income = new Bill();
-        income.setId(id);
-        income.setDescription(description);
-        income.setAmount(amount);
+    public void addBill(int id, String type, String description, int amount) {
+        Bill bill = new Bill();
+        bill.setId(id);
+        bill.setType(type);
+        bill.setDescription(description);
+        bill.setAmount(amount);
 
         realm.beginTransaction();
-        realm.copyToRealm(income);
+        realm.copyToRealm(bill);
         realm.commitTransaction();
 
         showLog("Added ; " + description);
@@ -123,9 +125,8 @@ public class RealmHelper {
         realm.commitTransaction();
         showToast("Hapus data berhasil.");
     }
-    public int sumIncome(){
-
-        realmResult = realm.where(Bill.class).findAll();
+    public int sumValue(String type){
+        realmResult = realm.where(Bill.class).equalTo("type",type).findAll();
         realmResult.sort("amount", Sort.DESCENDING);
         if (realmResult.size() > 0) {
             showLog("Size : " + realmResult.size());
@@ -144,9 +145,14 @@ public class RealmHelper {
         return sum_income;
 
     }
-    public int getNextKey()
-    {
-        return realm.where(Bill.class).max("id").intValue() + 1;
+    public int getNextKey() {
+        id=1;
+        realmResult = realm.where(Bill.class).findAll();
+        if(realmResult.size()>0){
+            id = realm.where(Bill.class).max("id").intValue() + 1;
+        }
+            return id;
+
     }
 
     /**

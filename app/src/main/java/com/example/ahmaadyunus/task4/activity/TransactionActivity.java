@@ -27,7 +27,7 @@ public class TransactionActivity extends MainActivity {
                 String type="income";
                 String description =  description_income_ET.getText().toString();
                 int amount =  Integer.parseInt(amount_income_ET.getText().toString());
-                    realmHelper.addIncome(id, type, description, amount);
+                    realmHelper.addBill(id, type, description, amount);
 
             }
         });

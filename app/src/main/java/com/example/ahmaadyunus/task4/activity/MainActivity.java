@@ -21,12 +21,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected DrawerLayout drawerLayout;
     protected NavigationView navigationView;
     RealmHelper realmHelper;
-    private static boolean isLaunch=true;
+    Realm realm;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
+        try {
+            realm.close();
+            Realm.deleteRealm(realm.getConfiguration());
+            //Realm file has been deleted.
+        } catch (Exception ex){
+            ex.printStackTrace();
+            //No Realm file to remove.
+        }
         RealmConfiguration config = new RealmConfiguration.Builder(this)
                 //versi database
                 .schemaVersion(0)
@@ -34,10 +42,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 .build();
         Realm.setDefaultConfiguration(config);
 
-        if(isLaunch){
-            openActivity(R.id.nav_dashboard);
-            isLaunch=false;
-        }
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
        realmHelper = new RealmHelper(MainActivity.this);
@@ -54,12 +58,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void openActivity(int id) {
         switch (id) {
             case R.id.nav_dashboard:
-                finish();
                 startActivity(new Intent(this, DashboardActivity.class));
+                finish();
                 break;
             case R.id.nav_transaction:
-                finish();
                 startActivity(new Intent(this, TransactionActivity.class));
+                finish();
                 break;
             case R.id.nav_synchronize:
 

@@ -24,4 +24,8 @@
     <string name="total">Total :</string>
     <string name="income">Income</string>
     <string name="expense">Expense</string>
+    <string name="add_data">Add Data</string>
+    <string name="add_income">Add Income</string>
+    <string name="add_btn">ADD</string>
+    <string name="cancel_btn">CANCEL</string>
 </resources>
