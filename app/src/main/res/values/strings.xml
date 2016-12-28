@@ -31,4 +31,5 @@
     <string name="add_expense">Add Expense</string>
     <string name="date"><![CDATA[Date]]></string>
     <string name="time">Time</string>
+    <string name="update">Update Data</string>
 </resources>

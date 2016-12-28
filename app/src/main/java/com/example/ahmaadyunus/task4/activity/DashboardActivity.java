@@ -26,6 +26,8 @@ import android.widget.Toast;
 
 import com.example.ahmaadyunus.task4.R;
 import com.example.ahmaadyunus.task4.adapter.BillAdapter;
+import com.example.ahmaadyunus.task4.adapter.RecyclerViewClickListener;
+import com.example.ahmaadyunus.task4.adapter.RecyclerViewTouchListener;
 import com.example.ahmaadyunus.task4.model.BillModel;
 import com.example.ahmaadyunus.task4.realm.RealmHelper;
 import com.github.clans.fab.FloatingActionMenu;
@@ -39,18 +41,20 @@ import java.util.List;
 import java.util.Locale;
 
 public class DashboardActivity extends MainActivity {
-    private RecyclerView recyclerViewIncome;
+    private RecyclerView recyclerViewDashboard;
     private RealmHelper realmHelper;
     private TextView income_TV, expense_TV, balance_TV;
     int sum_income, sum_expense;
     private com.github.clans.fab.FloatingActionButton fab_income, fab_expense;
     private FloatingActionMenu fab_menu;
     String type;
+    private String description_update,date_update,time_update;
+    private int amount_update;
     private SimpleDateFormat format;
     Calendar myCalendar;
     java.sql.Time timeValue;
     EditText description_input,amount_input,date_input,time_input;
-    private List<BillModel> dataIncome= new ArrayList<>();
+    private List<BillModel> dataBill= new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,20 +84,55 @@ public class DashboardActivity extends MainActivity {
         expense_TV = (TextView)findViewById(R.id.expense_tv);
         balance_TV = (TextView) findViewById(R.id.balance_TV);
         realmHelper = new RealmHelper(DashboardActivity.this);
-        recyclerViewIncome = (RecyclerView) findViewById(R.id.rv_dashboard);
-        recyclerViewIncome.setLayoutManager(new LinearLayoutManager(this));
+        recyclerViewDashboard = (RecyclerView) findViewById(R.id.rv_dashboard);
+        recyclerViewDashboard.setLayoutManager(new LinearLayoutManager(this));
+        recyclerViewDashboard.addOnItemTouchListener(new RecyclerViewTouchListener(getApplicationContext(), recyclerViewDashboard, new RecyclerViewClickListener() {
+            @Override
+            public void onClick(View view, int position) {
+                //Toast.makeText(getApplicationContext(), studentList.get(position).getId() + " is clicked!", Toast.LENGTH_SHORT).show();
+                description_update=dataBill.get(position).getDescription();
+                date_update = dataBill.get(position).getDate_time();
+                time_update = dataBill.get(position).getDate_time();
+                amount_update = dataBill.get(position).getAmount();
+
+                update_Bill(dataBill.get(position).getId(),description_update,date_update,time_update,amount_update);
+
+
+            }
+
+            @Override
+            public void onLongClick(View view, final int position) {
+//                AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this);
+//                builder.setTitle(R.string.delete_student);
+//                builder.setMessage(R.string.confirm_delete);
+//                builder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        delete_student(studentList.get(position).getId());
+//                    }
+//                });
+//                builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//
+//                    }
+//                });
+//                builder.show();
+
+            }
+        }));
         setRecyclerView();
         setValue();
     }
     public void setRecyclerView() {
-        dataIncome.clear();
+        dataBill.clear();
         try {
-            dataIncome = realmHelper.findAllIncome();
+            dataBill = realmHelper.findAllIncome();
         } catch (Exception e) {
             e.printStackTrace();
         }
-        BillAdapter adapterIncome = new BillAdapter(dataIncome);
-        recyclerViewIncome.setAdapter(adapterIncome);
+        BillAdapter adapterIncome = new BillAdapter(dataBill);
+        recyclerViewDashboard.setAdapter(adapterIncome);
     }
     public void setValue(){
         final DecimalFormat df = new DecimalFormat();
@@ -207,6 +246,46 @@ public class DashboardActivity extends MainActivity {
         String myFormat = "dd-MM-yyyy"; //In which you need put here
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
         date_input.setText(sdf.format(myCalendar.getTime()));
+    }
+    public void update_Bill(final int id, final String description, String date, String time, int amount){
+        LayoutInflater inflater = getLayoutInflater();
+        View dialoglayout = inflater.inflate(R.layout.layout_input, null);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        description_input = (EditText) dialoglayout.findViewById(R.id.description_input_ET);
+        date_input = (EditText) dialoglayout.findViewById(R.id.date_input);
+        time_input = (EditText) dialoglayout.findViewById(R.id.time_input);
+        amount_input = (EditText) dialoglayout.findViewById(R.id.amount_input_ET);
+
+        description_input.setText(description);
+        String newdate = date.substring(0, 10);
+        String newtime = time.substring(11, 19);
+        date_input.setText(newdate);
+        time_input.setText(newtime);
+        amount_input.setText(String.valueOf(amount));
+
+        builder.setTitle(R.string.update);
+        builder.setView(dialoglayout);
+
+        builder.setPositiveButton(R.string.update, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Dialog dialog2 = (Dialog) dialog;
+
+                description_input = (EditText) dialog2.findViewById(R.id.description_input_ET);
+                date_input = (EditText) dialog2.findViewById(R.id.date_input);
+                time_input = (EditText) dialog2.findViewById(R.id.time_input);
+                amount_input = (EditText) dialog2.findViewById(R.id.amount_input_ET);
+
+                realmHelper.updateBill(id
+                        ,description_input.getText().toString()
+                        ,date_input.getText().toString()+" "+time_input.getText().toString()
+                        ,Integer.parseInt(amount_input.getText().toString()));
+                setValue();
+                setRecyclerView();
+            }
+        });
+        builder.show();
     }
 
 }

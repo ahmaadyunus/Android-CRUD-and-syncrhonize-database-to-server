@@ -59,7 +59,7 @@ public class RealmHelper {
         realm.commitTransaction();
 
         showLog("Added ; " + description);
-        showToast(description + " berhasil disimpan.");
+        showToast(description + " Saved");
     }
 
 
@@ -90,7 +90,7 @@ public class RealmHelper {
 
         } else {
             showLog("Size : 0");
-            showToast("Database Kosong!");
+            showToast("No Data");
         }
         return dataIncome;
     }
@@ -103,15 +103,15 @@ public class RealmHelper {
      * @param description
      * @param amount
      */
-    public void updateIncome(int id, String type, String description, int amount) {
+    public void updateBill(int id, String description, String date_time, int amount) {
         realm.beginTransaction();
-        Bill article = realm.where(Bill.class).equalTo("id", id).findFirst();
-
-        article.setDescription(description);
-        article.setAmount(amount);
+        Bill bill = realm.where(Bill.class).equalTo("id", id).findFirst();
+        bill.setDescription(description);
+        bill.setDate_time(date_time);
+        bill.setAmount(amount);
         realm.commitTransaction();
         showLog("Updated : " + description);
-        showToast(description + " berhasil diupdate.");
+        showToast(description + " updated");
     }
 
     /**
@@ -131,7 +131,7 @@ public class RealmHelper {
     public int sumValue(String type){
         realmResult = realm.where(Bill.class).equalTo("type",type).findAll();
         realmResult.sort("amount", Sort.DESCENDING);
-        if (realmResult.size() > 0) {
+        try {
             showLog("Size : " + realmResult.size());
             sum_income=0;
             for (int i = 0; i < realmResult.size(); i++) {
@@ -141,9 +141,8 @@ public class RealmHelper {
                 showLog("Sum income : " + sum_income);
             }
 
-        } else {
-            showLog("Size : 0");
-            showToast("Database Kosong!");
+        } catch (Exception e){
+
         }
         return sum_income;
 
