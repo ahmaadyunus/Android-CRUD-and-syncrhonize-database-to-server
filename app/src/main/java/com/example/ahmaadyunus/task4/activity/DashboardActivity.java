@@ -204,7 +204,7 @@ public class DashboardActivity extends MainActivity {
     }
     private void updateLabel() {
 
-        String myFormat = "dd-mm-yyyy"; //In which you need put here
+        String myFormat = "dd-MM-yyyy"; //In which you need put here
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
         date_input.setText(sdf.format(myCalendar.getTime()));
     }

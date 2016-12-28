@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.example.ahmaadyunus.task4.R;
 import com.example.ahmaadyunus.task4.model.BillModel;
 
+import java.sql.Time;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.List;
@@ -47,6 +48,7 @@ public class BillAdapter extends RecyclerView.Adapter<BillAdapter.IncomeViewHold
             holder.icon_type.setImageResource(R.drawable.ic_expense);
         }
         holder.description.setText(billList.get(position).getDescription());
+        holder.date_time.setText(billList.get(position).getDate_time());
         holder.amount.setText("Rp. " + String.valueOf(df.format(billList.get(position).getAmount())));
 
     }
@@ -58,12 +60,14 @@ public class BillAdapter extends RecyclerView.Adapter<BillAdapter.IncomeViewHold
     public class IncomeViewHolder extends RecyclerView.ViewHolder {
         public ImageView icon_type;
         public TextView description;
+        public TextView date_time;
         public TextView amount;
 
         public IncomeViewHolder(View view) {
             super(view);
             icon_type = (ImageView)view.findViewById(R.id.img_type_icon);
             description =(TextView)view.findViewById(R.id.description_tv);
+            date_time = (TextView) view.findViewById(R.id.date);
             amount = (TextView) view.findViewById(R.id.amount_tv);
         }
     }

@@ -70,7 +70,7 @@ public class RealmHelper {
         List<BillModel> dataIncome = new ArrayList<>();
 
         realmResult = realm.where(Bill.class).findAll();
-        realmResult.sort("id", Sort.DESCENDING);
+        realmResult.sort("date_time", Sort.DESCENDING);
         if (realmResult.size() > 0) {
             showLog("Size : " + realmResult.size());
 
