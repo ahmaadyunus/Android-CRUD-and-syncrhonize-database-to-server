@@ -119,14 +119,14 @@ public class RealmHelper {
      *
      * @param id
      */
-    public void deleteIncome(int id) {
+    public void deleteBill(int id) {
         RealmResults<Bill> dataResultsDelIncome = realm.where(Bill.class).equalTo("id", id).findAll();
         realm.beginTransaction();
         dataResultsDelIncome.remove(0);
         dataResultsDelIncome.removeLast();
         dataResultsDelIncome.clear();
         realm.commitTransaction();
-        showToast("Hapus data berhasil.");
+        showToast("Delete Succesfully");
     }
     public int sumValue(String type){
         realmResult = realm.where(Bill.class).equalTo("type",type).findAll();

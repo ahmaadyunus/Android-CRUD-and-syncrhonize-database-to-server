@@ -102,22 +102,25 @@ public class DashboardActivity extends MainActivity {
 
             @Override
             public void onLongClick(View view, final int position) {
-//                AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this);
-//                builder.setTitle(R.string.delete_student);
-//                builder.setMessage(R.string.confirm_delete);
-//                builder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        delete_student(studentList.get(position).getId());
-//                    }
-//                });
-//                builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int which) {
-//
-//                    }
-//                });
-//                builder.show();
+              AlertDialog.Builder builder = new AlertDialog.Builder(DashboardActivity.this);
+                builder.setTitle(R.string.delete);
+                builder.setMessage(R.string.confirm_delete);
+                builder.setPositiveButton(R.string.delete_btn, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        realmHelper.deleteBill(dataBill.get(position).getId());
+                        setValue();
+                        setRecyclerView();
+                    }
+                });
+                builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+                builder.show();
+
 
             }
         }));
@@ -263,7 +266,8 @@ public class DashboardActivity extends MainActivity {
         date_input.setText(newdate);
         time_input.setText(newtime);
         amount_input.setText(String.valueOf(amount));
-
+        datePicker();
+        timePicker();
         builder.setTitle(R.string.update);
         builder.setView(dialoglayout);
 

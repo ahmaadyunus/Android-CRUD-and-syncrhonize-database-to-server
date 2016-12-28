@@ -32,4 +32,8 @@
     <string name="date"><![CDATA[Date]]></string>
     <string name="time">Time</string>
     <string name="update">Update Data</string>
+    <string name="delete">Delete</string>
+    <string name="confirm_delete">Are you sure want to delete ?</string>
+    <string name="cancel">CANCEL</string>
+    <string name="delete_btn">DELETE</string>
 </resources>
