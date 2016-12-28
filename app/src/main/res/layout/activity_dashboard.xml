@@ -37,7 +37,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="0.13"
-            android:layout_marginBottom="30dp"
+            android:layout_marginBottom="20dp"
             >
             <android.support.v7.widget.CardView
                 android:layout_width="0dp"
@@ -53,14 +53,13 @@
                 android:paddingTop="5dp"
                 android:paddingBottom="5dp"
                 android:background="@android:color/black">
->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/income"
                     android:layout_gravity="center"
                     android:textColor="@color/white"
-                    android:layout_marginBottom="10dp"/>
+                    android:layout_marginBottom="6dp"/>
                 <TextView
                     android:id="@+id/income_tv"
                     android:layout_width="wrap_content"
@@ -89,7 +88,7 @@
                     android:text="@string/expense"
                     android:textColor="@color/white"
                     android:layout_gravity="center"
-                    android:layout_marginBottom="10dp"/>
+                    android:layout_marginBottom="6dp"/>
                 <TextView
                     android:id="@+id/expense_tv"
                     android:layout_width="wrap_content"
@@ -115,6 +114,7 @@
             android:layout_weight="0.1"
             android:gravity="bottom">
             <TextView
+                android:id="@+id/balance_TV"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Balance : Rp. 1000000"

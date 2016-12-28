@@ -8,13 +8,25 @@ public class BillModel {
     private int id;
     private String description;
     private String type;
+    private String date_time;
     private int amount;
 
+    public String getDate_time() {
+        return date_time;
+    }
 
-    public BillModel(int id, String type, String description, int amount){
+    public void setDate_time(String date_time) {
+        this.date_time = date_time;
+    }
+
+
+
+
+    public BillModel(int id, String type, String description, String date_time, int amount){
         this.id=id;
         this.type=type;
         this.description=description;
+        this.date_time=date_time;
         this.amount=amount;
 
     }

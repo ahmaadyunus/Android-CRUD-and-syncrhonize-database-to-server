@@ -28,4 +28,7 @@
     <string name="add_income">Add Income</string>
     <string name="add_btn">ADD</string>
     <string name="cancel_btn">CANCEL</string>
+    <string name="add_expense">Add Expense</string>
+    <string name="date"><![CDATA[Date]]></string>
+    <string name="time">Time</string>
 </resources>

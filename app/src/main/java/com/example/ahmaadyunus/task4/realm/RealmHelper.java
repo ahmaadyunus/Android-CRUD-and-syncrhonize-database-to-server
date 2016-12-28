@@ -46,11 +46,12 @@ public class RealmHelper {
      * @param description
      * @param amount
      */
-    public void addBill(int id, String type, String description, int amount) {
+    public void addBill(int id, String type, String description, String date_time,int amount) {
         Bill bill = new Bill();
         bill.setId(id);
         bill.setType(type);
         bill.setDescription(description);
+        bill.setDate_time(date_time);
         bill.setAmount(amount);
 
         realm.beginTransaction();
@@ -76,13 +77,15 @@ public class RealmHelper {
             for (int i = 0; i < realmResult.size(); i++) {
                 String description;
                 String type;
+                String date_time;
                 int amount;
                 int id = realmResult.get(i).getId();
                 type= realmResult.get(i).getType();
                 description = realmResult.get(i).getDescription();
+                date_time = realmResult.get(i).getDate_time();
                 amount = realmResult.get(i).getAmount();
 
-                dataIncome.add(new BillModel(id, type, description, amount));
+                dataIncome.add(new BillModel(id, type, description, date_time, amount));
             }
 
         } else {

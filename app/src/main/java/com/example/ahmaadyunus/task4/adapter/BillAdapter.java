@@ -12,6 +12,8 @@ import android.widget.TextView;
 import com.example.ahmaadyunus.task4.R;
 import com.example.ahmaadyunus.task4.model.BillModel;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.List;
 
 /**
@@ -32,6 +34,11 @@ public class BillAdapter extends RecyclerView.Adapter<BillAdapter.IncomeViewHold
     }
     @Override
     public void onBindViewHolder(IncomeViewHolder holder, int position) {
+        final DecimalFormat df = new DecimalFormat();
+        DecimalFormatSymbols dfs = new DecimalFormatSymbols();
+        dfs.setCurrencySymbol("");
+        dfs.setGroupingSeparator('.');
+        df.setDecimalFormatSymbols(dfs);
         if(String.valueOf(billList.get(position).getType()).equals("income")) {
             holder.amount.setTextColor(Color.GREEN);
             holder.icon_type.setImageResource(R.drawable.ic_income);
@@ -40,7 +47,7 @@ public class BillAdapter extends RecyclerView.Adapter<BillAdapter.IncomeViewHold
             holder.icon_type.setImageResource(R.drawable.ic_expense);
         }
         holder.description.setText(billList.get(position).getDescription());
-        holder.amount.setText("Rp. " + String.valueOf(billList.get(position).getAmount()));
+        holder.amount.setText("Rp. " + String.valueOf(df.format(billList.get(position).getAmount())));
 
     }
     @Override

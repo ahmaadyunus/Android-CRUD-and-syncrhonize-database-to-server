@@ -12,7 +12,17 @@ public class Bill extends RealmObject{
     private int id;
     private String type;
     private String description;
+    private String date_time;
     private int amount;
+
+    public String getDate_time() {
+        return date_time;
+    }
+
+    public void setDate_time(String date_time) {
+        this.date_time = date_time;
+    }
+
 
     public int getId() {
         return id;
