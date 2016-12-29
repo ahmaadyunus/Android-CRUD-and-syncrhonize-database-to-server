@@ -3,8 +3,10 @@ package com.example.ahmaadyunus.task4.activity;
 import android.content.Intent;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.example.ahmaadyunus.task4.R;
@@ -18,7 +20,7 @@ import io.realm.RealmMigration;
 import io.realm.RealmSchema;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
-    protected DrawerLayout drawerLayout;
+    protected DrawerLayout drawerLayout, draweNavView;
     protected NavigationView navigationView;
     RealmHelper realmHelper;
     Realm realm;
@@ -27,6 +29,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
+
         try {
             realm.close();
             Realm.deleteRealm(realm.getConfiguration());
@@ -41,7 +44,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 .migration(new DataMigration())
                 .build();
         Realm.setDefaultConfiguration(config);
-
+       // draweNavView = (DrawerLayout)findViewById(R.id.drawer_nav_view);
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
        realmHelper = new RealmHelper(MainActivity.this);

@@ -48,10 +48,14 @@ public class RealmHelper {
      */
     public void addBill(int id, String type, String description, String date_time,int amount) {
         Bill bill = new Bill();
+        String month = date_time.substring(3,5);
+        String year = date_time.substring(6,8);
         bill.setId(id);
         bill.setType(type);
         bill.setDescription(description);
         bill.setDate_time(date_time);
+        bill.setMonth(month);
+        bill.setYear(year);
         bill.setAmount(amount);
 
         realm.beginTransaction();
@@ -66,7 +70,7 @@ public class RealmHelper {
     /**
      * method mencari semua article
      */
-    public List<BillModel> findAllIncome() {
+    public List<BillModel> findAllBill() {
         List<BillModel> dataIncome = new ArrayList<>();
 
         realmResult = realm.where(Bill.class).findAll();
@@ -78,14 +82,18 @@ public class RealmHelper {
                 String description;
                 String type;
                 String date_time;
+                String month;
+                String year;
                 int amount;
                 int id = realmResult.get(i).getId();
                 type= realmResult.get(i).getType();
                 description = realmResult.get(i).getDescription();
                 date_time = realmResult.get(i).getDate_time();
+                month = realmResult.get(i).getMonth();
+                year = realmResult.get(i).getYear();
                 amount = realmResult.get(i).getAmount();
 
-                dataIncome.add(new BillModel(id, type, description, date_time, amount));
+                dataIncome.add(new BillModel(id, type, description, date_time, month, year, amount));
             }
 
         } else {
@@ -93,6 +101,38 @@ public class RealmHelper {
             showToast("No Data");
         }
         return dataIncome;
+    }
+    public List<BillModel> findAllByMonth(String month) {
+        List<BillModel> dataBill = new ArrayList<>();
+
+        realmResult = realm.where(Bill.class).equalTo("month",month).findAll();
+        realmResult.sort("date_time", Sort.DESCENDING);
+        if (realmResult.size() > 0) {
+            showLog("Size : " + realmResult.size());
+
+            for (int i = 0; i < realmResult.size(); i++) {
+                String description;
+                String type;
+                String date_time;
+                String month1;
+                String year;
+                int amount;
+                int id = realmResult.get(i).getId();
+                type= realmResult.get(i).getType();
+                description = realmResult.get(i).getDescription();
+                date_time = realmResult.get(i).getDate_time();
+                month1 = realmResult.get(i).getMonth();
+                year = realmResult.get(i).getYear();
+                amount = realmResult.get(i).getAmount();
+
+                dataBill.add(new BillModel(id, type, description, date_time, month1, year, amount));
+            }
+
+        } else {
+            showLog("Size : 0");
+            showToast("No Data");
+        }
+        return dataBill;
     }
 
 
@@ -103,11 +143,13 @@ public class RealmHelper {
      * @param description
      * @param amount
      */
-    public void updateBill(int id, String description, String date_time, int amount) {
+    public void updateBill(int id, String description, String date_time, String month, String year, int amount) {
         realm.beginTransaction();
         Bill bill = realm.where(Bill.class).equalTo("id", id).findFirst();
         bill.setDescription(description);
         bill.setDate_time(date_time);
+        bill.setMonth(month);
+        bill.setYear(year);
         bill.setAmount(amount);
         realm.commitTransaction();
         showLog("Updated : " + description);
@@ -127,6 +169,7 @@ public class RealmHelper {
         dataResultsDelIncome.clear();
         realm.commitTransaction();
         showToast("Delete Succesfully");
+
     }
     public int sumValue(String type){
         realmResult = realm.where(Bill.class).equalTo("type",type).findAll();

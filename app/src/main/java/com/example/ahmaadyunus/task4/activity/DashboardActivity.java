@@ -8,12 +8,16 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.view.GravityCompat;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.ButtonBarLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateFormat;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -32,10 +36,12 @@ import com.example.ahmaadyunus.task4.model.BillModel;
 import com.example.ahmaadyunus.task4.realm.RealmHelper;
 import com.github.clans.fab.FloatingActionMenu;
 
+import java.lang.reflect.Array;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
@@ -47,10 +53,12 @@ public class DashboardActivity extends MainActivity {
     int sum_income, sum_expense;
     private com.github.clans.fab.FloatingActionButton fab_income, fab_expense;
     private FloatingActionMenu fab_menu;
-    String type;
+    private String type;
     private String description_update,date_update,time_update;
     private int amount_update;
     private SimpleDateFormat format;
+    private Spinner spinner_month;
+    ButtonBarLayout toggle;
     Calendar myCalendar;
     java.sql.Time timeValue;
     EditText description_input,amount_input,date_input,time_input;
@@ -62,6 +70,13 @@ public class DashboardActivity extends MainActivity {
         View contentView = getLayoutInflater().inflate(R.layout.activity_dashboard,null);
         drawerLayout.addView(contentView,1);
         fab_menu = (FloatingActionMenu) findViewById(R.id.menu);
+        toggle = (ButtonBarLayout) findViewById(R.id.toggle_btn_dashboard);
+        toggle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                drawerLayout.openDrawer(GravityCompat.START);
+            }
+        });
         fab_income = (com.github.clans.fab.FloatingActionButton) findViewById(R.id.fab_income);
         fab_income.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,7 +100,22 @@ public class DashboardActivity extends MainActivity {
         balance_TV = (TextView) findViewById(R.id.balance_TV);
         realmHelper = new RealmHelper(DashboardActivity.this);
         recyclerViewDashboard = (RecyclerView) findViewById(R.id.rv_dashboard);
+        spinner_month = (Spinner) findViewById(R.id.month_spinner);
+        spinnerMonth();
+        final String itemSpinnerMonth =spinner_month.getSelectedItem().toString();
+        spinner_month.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+               setRecyclerView(spinner_month.getSelectedItem().toString());
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
         recyclerViewDashboard.setLayoutManager(new LinearLayoutManager(this));
+
         recyclerViewDashboard.addOnItemTouchListener(new RecyclerViewTouchListener(getApplicationContext(), recyclerViewDashboard, new RecyclerViewClickListener() {
             @Override
             public void onClick(View view, int position) {
@@ -110,7 +140,7 @@ public class DashboardActivity extends MainActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         realmHelper.deleteBill(dataBill.get(position).getId());
                         setValue();
-                        setRecyclerView();
+                        setRecyclerView("-");
                     }
                 });
                 builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -124,18 +154,57 @@ public class DashboardActivity extends MainActivity {
 
             }
         }));
-        setRecyclerView();
+        setRecyclerView(itemSpinnerMonth);
         setValue();
     }
-    public void setRecyclerView() {
+    public void setRecyclerView(String month) {
         dataBill.clear();
-        try {
-            dataBill = realmHelper.findAllIncome();
-        } catch (Exception e) {
-            e.printStackTrace();
+        String monthFilter;
+        if(month.equals("January")){
+            monthFilter="1";
+        }else if(month.equals("February")){
+            monthFilter="2";
+        }else if(month.equals("March")){
+            monthFilter="3";
+        }else if(month.equals("April")){
+            monthFilter="4";
+        }else if(month.equals("May")){
+            monthFilter="5";
+        }else if(month.equals("June")){
+            monthFilter="6";
+        }else if(month.equals("July")){
+            monthFilter="7";
+        }else if(month.equals("August")){
+            monthFilter="8";
+        }else if(month.equals("September")){
+            monthFilter="9";
+        }else if(month.equals("October")){
+            monthFilter="10";
+        }else if(month.equals("November")){
+            monthFilter="11";
+        }else if(month.equals("December")){
+            monthFilter="12";
+        }else {
+            monthFilter="-";
         }
-        BillAdapter adapterIncome = new BillAdapter(dataBill);
-        recyclerViewDashboard.setAdapter(adapterIncome);
+        if(monthFilter.equals("-")) {
+            try {
+                dataBill = realmHelper.findAllBill();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            BillAdapter adapterIncome = new BillAdapter(dataBill);
+            recyclerViewDashboard.setAdapter(adapterIncome);
+        }else{
+            try {
+                dataBill = realmHelper.findAllByMonth(monthFilter);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            BillAdapter adapterIncome = new BillAdapter(dataBill);
+            recyclerViewDashboard.setAdapter(adapterIncome);
+
+        }
     }
     public void setValue(){
         final DecimalFormat df = new DecimalFormat();
@@ -178,7 +247,7 @@ public class DashboardActivity extends MainActivity {
                 description_input = (EditText) dialog1.findViewById(R.id.description_input_ET);
                 amount_input = (EditText) dialog1.findViewById(R.id.amount_input_ET);
                 realmHelper.addBill(id,type,description_input.getText().toString(),date_time, Integer.parseInt(amount_input.getText().toString()));
-                setRecyclerView();
+                setRecyclerView("-");
                 setValue();
                 fab_menu.close(true);
             }
@@ -280,16 +349,28 @@ public class DashboardActivity extends MainActivity {
                 date_input = (EditText) dialog2.findViewById(R.id.date_input);
                 time_input = (EditText) dialog2.findViewById(R.id.time_input);
                 amount_input = (EditText) dialog2.findViewById(R.id.amount_input_ET);
-
+                String date_time = date_input.getText().toString();
+                String month = date_time.substring(3,5);
+                String year = date_time.substring(6,8);
                 realmHelper.updateBill(id
                         ,description_input.getText().toString()
                         ,date_input.getText().toString()+" "+time_input.getText().toString()
+                        ,month
+                        ,year
                         ,Integer.parseInt(amount_input.getText().toString()));
                 setValue();
-                setRecyclerView();
+                setRecyclerView("-");
             }
         });
         builder.show();
+    }
+    public void spinnerMonth() {
+        String[] month_array = new String[]{"-","January","February","March","April","May","June","July","August","September","October","November","December"};
+        List<String> list = Arrays.asList(month_array);
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item, list);
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner_month.setAdapter(dataAdapter);
     }
 
 }

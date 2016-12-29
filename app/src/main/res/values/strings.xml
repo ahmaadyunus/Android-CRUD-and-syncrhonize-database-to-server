@@ -36,4 +36,6 @@
     <string name="confirm_delete">Are you sure want to delete ?</string>
     <string name="cancel">CANCEL</string>
     <string name="delete_btn">DELETE</string>
+    <string name="navigation_drawer_open">Drawer Open</string>
+    <string name="navigation_drawer_close">Drawer Close</string>
 </resources>

@@ -13,6 +13,8 @@ public class Bill extends RealmObject{
     private String type;
     private String description;
     private String date_time;
+    private String month;
+    private String year;
     private int amount;
 
     public String getDate_time() {
@@ -47,6 +49,21 @@ public class Bill extends RealmObject{
         this.description = description;
     }
 
+    public String getMonth() {
+        return month;
+    }
+
+    public void setMonth(String month) {
+        this.month = month;
+    }
+
+    public String getYear() {
+        return year;
+    }
+
+    public void setYear(String year) {
+        this.year = year;
+    }
     public int getAmount() {
         return amount;
     }
