@@ -1,6 +1,8 @@
 package com.example.ahmaadyunus.task4.realm;
 
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.util.Log;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -207,7 +209,22 @@ public class RealmHelper {
         showToast("Delete Succesfully");
 
     }
-    public String synchronize() {
+    public String synchronize(final Context context) {
+        final ProgressDialog progress_dialog = new ProgressDialog(context);
+        progress_dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progress_dialog.setTitle("Synchronize");
+        progress_dialog.setCancelable(false);
+        progress_dialog.setMessage("Please wait ...");
+        progress_dialog.setProgress(0);
+        progress_dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Cancel Process", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+
+            }
+        });
+        progress_dialog.show();
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://private-574b4-synchronize.apiary-mock.com/bill/")
                 .addConverterFactory(GsonConverterFactory.create())
@@ -232,6 +249,9 @@ public class RealmHelper {
                     public void onResponse(Call<BillModel> call, Response<BillModel> response) {
                         // Toast.makeText(MainActivity.this,""+response.body().getStatus(), LENGTH_SHORT).show();
                         status = String.valueOf(response.body().getMessage());
+                        progress_dialog.dismiss();
+                        Toast.makeText(context, status, Toast.LENGTH_SHORT).show();
+
                     }
 
                     @Override

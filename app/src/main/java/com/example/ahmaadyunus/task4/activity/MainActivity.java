@@ -1,5 +1,7 @@
 package com.example.ahmaadyunus.task4.activity;
 
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
@@ -9,6 +11,7 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -47,7 +50,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
-        progressBar= (ProgressBar)findViewById(R.id.progress_bar);
+
         try {
             realm.close();
             Realm.deleteRealm(realm.getConfiguration());
@@ -87,8 +90,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 finish();
                 break;
             case R.id.nav_synchronize:
-                status = realmHelper.synchronize();
-                Toast.makeText(MainActivity.this, status, Toast.LENGTH_SHORT).show();
+                    status = realmHelper.synchronize(MainActivity.this);
                 break;
             default:
                 break;
