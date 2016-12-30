@@ -50,7 +50,7 @@ public class DashboardActivity extends MainActivity {
     private RecyclerView recyclerViewDashboard;
     private RealmHelper realmHelper;
     private TextView income_TV, expense_TV, balance_TV;
-    int sum_income, sum_expense;
+    private int sum_income, sum_expense;
     private com.github.clans.fab.FloatingActionButton fab_income, fab_expense;
     private FloatingActionMenu fab_menu;
     private String type;
@@ -62,7 +62,7 @@ public class DashboardActivity extends MainActivity {
     Calendar myCalendar;
     java.sql.Time timeValue;
     EditText description_input,amount_input,date_input,time_input;
-    private List<BillModel> dataBill= new ArrayList<>();
+    //private List<BillModel> dataBill= new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

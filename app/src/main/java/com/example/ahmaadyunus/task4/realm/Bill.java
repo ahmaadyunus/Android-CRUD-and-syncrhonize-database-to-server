@@ -1,4 +1,4 @@
-package com.example.ahmaadyunus.task4.model;
+package com.example.ahmaadyunus.task4.realm;
 
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
@@ -24,7 +24,6 @@ public class Bill extends RealmObject{
     public void setDate_time(String date_time) {
         this.date_time = date_time;
     }
-
 
     public int getId() {
         return id;

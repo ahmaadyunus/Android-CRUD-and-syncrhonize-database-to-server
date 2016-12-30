@@ -7,29 +7,47 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
+import android.widget.ProgressBar;
+import android.widget.Toast;
 
+import com.example.ahmaadyunus.task4.API.BillApi;
 import com.example.ahmaadyunus.task4.R;
 
+import com.example.ahmaadyunus.task4.model.BillModel;
 import com.example.ahmaadyunus.task4.realm.RealmHelper;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import io.realm.DynamicRealm;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmMigration;
 import io.realm.RealmSchema;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
+import static android.widget.Toast.LENGTH_SHORT;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
     protected DrawerLayout drawerLayout, draweNavView;
     protected NavigationView navigationView;
     RealmHelper realmHelper;
     Realm realm;
+    private String status;
+    ProgressBar progressBar;
+    protected List<BillModel> dataBill= new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
-
+        progressBar= (ProgressBar)findViewById(R.id.progress_bar);
         try {
             realm.close();
             Realm.deleteRealm(realm.getConfiguration());
@@ -69,7 +87,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 finish();
                 break;
             case R.id.nav_synchronize:
-
+                status = realmHelper.synchronize();
+                Toast.makeText(MainActivity.this, status, Toast.LENGTH_SHORT).show();
                 break;
             default:
                 break;
@@ -93,6 +112,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         }
     }
+
+
+
+
+
+
 
 
 

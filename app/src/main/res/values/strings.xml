@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Task 4</string>
+    <string name="app_name">BillWallet</string>
     <string-array name="navigation_drawer_items_array">
         <item>Home</item>
         <item>Profile</item>
@@ -38,4 +38,5 @@
     <string name="delete_btn">DELETE</string>
     <string name="navigation_drawer_open">Drawer Open</string>
     <string name="navigation_drawer_close">Drawer Close</string>
+    <string name="name">Ahmad Yunus</string>
 </resources>

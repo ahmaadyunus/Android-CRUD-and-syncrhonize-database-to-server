@@ -2,18 +2,26 @@ package com.example.ahmaadyunus.task4.realm;
 
 import android.content.Context;
 import android.util.Log;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.example.ahmaadyunus.task4.model.Bill;
+import com.example.ahmaadyunus.task4.API.BillApi;
+import com.example.ahmaadyunus.task4.activity.MainActivity;
 import com.example.ahmaadyunus.task4.model.BillModel;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import io.realm.Realm;
-import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
 import io.realm.Sort;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
+import static android.widget.Toast.LENGTH_SHORT;
 
 /**
  * Created by ahmaadyunus on 27/12/16.
@@ -23,6 +31,7 @@ public class RealmHelper {
     private static final String TAG = "RealmHelper";
     private static int sum_income=0;
     private int id;
+    private String status;
     private Realm realm;
     private RealmResults<Bill> realmResult;
     public Context context;
@@ -143,17 +152,44 @@ public class RealmHelper {
      * @param description
      * @param amount
      */
-    public void updateBill(int id, String description, String date_time, String month, String year, int amount) {
+    public void updateBill(final int id, final String description, final String date_time,final String month, final String year, final int amount) {
         realm.beginTransaction();
-        Bill bill = realm.where(Bill.class).equalTo("id", id).findFirst();
-        bill.setDescription(description);
-        bill.setDate_time(date_time);
-        bill.setMonth(month);
-        bill.setYear(year);
-        bill.setAmount(amount);
+//        Bill bill = realm.where(Bill.class).equalTo("id", id).findFirst();
+//        bill.setDescription(description);
+//        bill.setDate_time(date_time);
+//        bill.setMonth(month);
+//        bill.setYear(year);
+//        bill.setAmount(amount);
+
+        realm.executeTransaction(new Realm.Transaction(){
+                                     @Override
+                                     public void execute(Realm realm) {
+                                         Bill bill = realm.where(Bill.class).equalTo("id", id).findFirst();
+                                         bill.setDescription(description);
+                                         bill.setDate_time(date_time);
+                                         bill.setMonth(month);
+                                         bill.setYear(year);
+                                         bill.setAmount(amount);
+
+                                     }
+
+                                 },new Realm.Transaction.Callback(){
+                                        @Override
+                                        public void onSuccess() {
+                                            super.onSuccess();
+                                            showLog("Updated : " + description);
+                                            showToast(description + " updated");
+
+                                        }
+
+                                        @Override
+                                        public void onError(Exception e) {
+                                            super.onError(e);
+                                            showLog("Updated : " + description);
+                                            showToast(description + " update failure");
+                                        }
+                                 });
         realm.commitTransaction();
-        showLog("Updated : " + description);
-        showToast(description + " updated");
     }
 
     /**
@@ -170,6 +206,48 @@ public class RealmHelper {
         realm.commitTransaction();
         showToast("Delete Succesfully");
 
+    }
+    public String synchronize() {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://private-80e9a-android23.apiary-mock.com/users/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        BillApi user_api = retrofit.create(BillApi.class);
+        BillModel bill = new BillModel();
+        realmResult = realm.where(Bill.class).findAll();
+        realmResult.sort("date_time", Sort.DESCENDING);
+        if (realmResult.size() > 0) {
+            showLog("Size : " + realmResult.size());
+
+            for (int i = 0; i < realmResult.size(); i++) {
+
+                bill.setId(realmResult.get(i).getId());
+                bill.setDescription(realmResult.get(i).getDescription());
+                bill.setType(realmResult.get(i).getType());
+                bill.setDate_time(realmResult.get(i).getDate_time());
+                bill.setMonth(realmResult.get(i).getMonth());
+                bill.setYear(realmResult.get(i).getYear());
+                bill.setAmount(realmResult.get(i).getAmount());
+                bill.getStatus();
+                Call<BillModel> userSave = user_api.postBill(bill);
+                userSave.enqueue(new Callback<BillModel>() {
+                    @Override
+                    public void onResponse(Call<BillModel> call, Response<BillModel> response) {
+                        // Toast.makeText(MainActivity.this,""+response.body().getStatus(), LENGTH_SHORT).show();
+                        status = String.valueOf(response.body().getStatus());
+                    }
+
+                    @Override
+                    public void onFailure(Call<BillModel> call, Throwable t) {
+                        Log.d("onFailure", t.toString());
+                        status = t.toString();
+                    }
+                });
+            }
+
+
+        }
+        return status;
     }
     public int sumValue(String type){
         realmResult = realm.where(Bill.class).equalTo("type",type).findAll();

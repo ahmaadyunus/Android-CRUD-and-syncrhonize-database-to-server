@@ -12,8 +12,11 @@ public class BillModel {
     private String month;
     private String year;
     private int amount;
+    private String status;
 
+    public BillModel(){
 
+    }
     public BillModel(int id, String type, String description, String date_time, String month, String year, int amount){
         this.id=id;
         this.type=type;
@@ -33,6 +36,13 @@ public class BillModel {
     }
     public String getType() {
         return type;
+    }
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public String getMonth() {
