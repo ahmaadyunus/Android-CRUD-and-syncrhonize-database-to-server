@@ -29,7 +29,7 @@ import static android.widget.Toast.LENGTH_SHORT;
 
 public class RealmHelper {
     private static final String TAG = "RealmHelper";
-    private static int sum_income=0;
+    private static int sum_bill=0;
     private int id;
     private String status;
     private Realm realm;
@@ -209,7 +209,7 @@ public class RealmHelper {
     }
     public String synchronize() {
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://private-80e9a-android23.apiary-mock.com/users/")
+                .baseUrl("https://private-574b4-synchronize.apiary-mock.com/bill/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         BillApi user_api = retrofit.create(BillApi.class);
@@ -225,16 +225,13 @@ public class RealmHelper {
                 bill.setDescription(realmResult.get(i).getDescription());
                 bill.setType(realmResult.get(i).getType());
                 bill.setDate_time(realmResult.get(i).getDate_time());
-                bill.setMonth(realmResult.get(i).getMonth());
-                bill.setYear(realmResult.get(i).getYear());
                 bill.setAmount(realmResult.get(i).getAmount());
-                bill.getStatus();
                 Call<BillModel> userSave = user_api.postBill(bill);
                 userSave.enqueue(new Callback<BillModel>() {
                     @Override
                     public void onResponse(Call<BillModel> call, Response<BillModel> response) {
                         // Toast.makeText(MainActivity.this,""+response.body().getStatus(), LENGTH_SHORT).show();
-                        status = String.valueOf(response.body().getStatus());
+                        status = String.valueOf(response.body().getMessage());
                     }
 
                     @Override
@@ -251,21 +248,34 @@ public class RealmHelper {
     }
     public int sumValue(String type){
         realmResult = realm.where(Bill.class).equalTo("type",type).findAll();
+
         realmResult.sort("amount", Sort.DESCENDING);
         try {
             showLog("Size : " + realmResult.size());
-            sum_income=0;
-            for (int i = 0; i < realmResult.size(); i++) {
-                int amount;
-                amount = realmResult.get(i).getAmount();
-                sum_income = sum_income+amount;
-                showLog("Sum income : " + sum_income);
-            }
+            sum_bill=realmResult.sum("amount").intValue();
+        } catch (Exception e){
+
+        }
+        return sum_bill;
+
+    }
+    public int sumValueMonth(String type, String month){
+        realmResult = realm.where(Bill.class).equalTo("type",type).equalTo("month",month).findAll();
+        realmResult.sort("amount", Sort.DESCENDING);
+        try {
+            showLog("Size : " + realmResult.size());
+            sum_bill=realmResult.sum("amount").intValue();
+//            for (int i = 0; i < realmResult.size(); i++) {
+//                int amount;
+//                amount = realmResult.get(i).getAmount();
+//                sum_income = sum_income+amount;
+//                showLog("Sum income : " + sum_income);
+//            }
 
         } catch (Exception e){
 
         }
-        return sum_income;
+        return sum_bill;
 
     }
     public int getNextKey() {

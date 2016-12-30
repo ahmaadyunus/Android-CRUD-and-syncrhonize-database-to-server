@@ -12,7 +12,7 @@ import retrofit2.http.POST;
 
 public interface BillApi {
 
-    @POST("https://private-80e9a-android23.apiary-mock.com/users")
+    @POST("https://private-574b4-synchronize.apiary-mock.com/bill")
 
     Call<BillModel> postBill(@Body BillModel user);
 

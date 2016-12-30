@@ -12,7 +12,7 @@ public class BillModel {
     private String month;
     private String year;
     private int amount;
-    private String status;
+    private String message;
 
     public BillModel(){
 
@@ -37,12 +37,12 @@ public class BillModel {
     public String getType() {
         return type;
     }
-    public String getStatus() {
-        return status;
+    public String getMessage() {
+        return message;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setMessage(String Message) {
+        this.message = message;
     }
 
     public String getMonth() {

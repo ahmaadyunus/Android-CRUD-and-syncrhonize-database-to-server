@@ -107,6 +107,9 @@ public class DashboardActivity extends MainActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                setRecyclerView(spinner_month.getSelectedItem().toString());
+               if(!spinner_month.getSelectedItem().toString().equals("-")) {
+                   setValuebyMonth(spinner_month.getSelectedItem().toString());
+               }
             }
 
             @Override
@@ -159,34 +162,8 @@ public class DashboardActivity extends MainActivity {
     }
     public void setRecyclerView(String month) {
         dataBill.clear();
-        String monthFilter;
-        if(month.equals("January")){
-            monthFilter="1";
-        }else if(month.equals("February")){
-            monthFilter="2";
-        }else if(month.equals("March")){
-            monthFilter="3";
-        }else if(month.equals("April")){
-            monthFilter="4";
-        }else if(month.equals("May")){
-            monthFilter="5";
-        }else if(month.equals("June")){
-            monthFilter="6";
-        }else if(month.equals("July")){
-            monthFilter="7";
-        }else if(month.equals("August")){
-            monthFilter="8";
-        }else if(month.equals("September")){
-            monthFilter="9";
-        }else if(month.equals("October")){
-            monthFilter="10";
-        }else if(month.equals("November")){
-            monthFilter="11";
-        }else if(month.equals("December")){
-            monthFilter="12";
-        }else {
-            monthFilter="-";
-        }
+        String monthFilter=month_Filter(month);
+
         if(monthFilter.equals("-")) {
             try {
                 dataBill = realmHelper.findAllBill();
@@ -214,6 +191,23 @@ public class DashboardActivity extends MainActivity {
         df.setDecimalFormatSymbols(dfs);
         sum_income = realmHelper.sumValue("income");
         sum_expense = realmHelper.sumValue("expense");
+        int balance = sum_income-sum_expense;
+        income_TV.setTextColor(Color.GREEN);
+        expense_TV.setTextColor(Color.RED);
+        income_TV.setText("Rp. "+String.valueOf(df.format(sum_income))+",-");
+        expense_TV.setText("Rp. "+String.valueOf(df.format(sum_expense))+",-");
+        balance_TV.setText("Balance : Rp. "+String.valueOf(df.format(balance))+",-");
+
+    }
+    public void setValuebyMonth(String month){
+        String monthFilter=month_Filter(month);
+        final DecimalFormat df = new DecimalFormat();
+        DecimalFormatSymbols dfs = new DecimalFormatSymbols();
+        dfs.setCurrencySymbol("");
+        dfs.setGroupingSeparator('.');
+        df.setDecimalFormatSymbols(dfs);
+        sum_income = realmHelper.sumValueMonth("income",monthFilter);
+        sum_expense = realmHelper.sumValueMonth("expense",monthFilter);
         int balance = sum_income-sum_expense;
         income_TV.setTextColor(Color.GREEN);
         expense_TV.setTextColor(Color.RED);
@@ -371,6 +365,37 @@ public class DashboardActivity extends MainActivity {
                 android.R.layout.simple_spinner_item, list);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner_month.setAdapter(dataAdapter);
+    }
+    public String month_Filter(String month){
+        String monthFilter;
+        if(month.equals("January")){
+            monthFilter="1";
+        }else if(month.equals("February")){
+            monthFilter="2";
+        }else if(month.equals("March")){
+            monthFilter="3";
+        }else if(month.equals("April")){
+            monthFilter="4";
+        }else if(month.equals("May")){
+            monthFilter="5";
+        }else if(month.equals("June")){
+            monthFilter="6";
+        }else if(month.equals("July")){
+            monthFilter="7";
+        }else if(month.equals("August")){
+            monthFilter="8";
+        }else if(month.equals("September")){
+            monthFilter="9";
+        }else if(month.equals("October")){
+            monthFilter="10";
+        }else if(month.equals("November")){
+            monthFilter="11";
+        }else if(month.equals("December")){
+            monthFilter="12";
+        }else {
+            monthFilter="-";
+        }
+        return monthFilter;
     }
 
 }
